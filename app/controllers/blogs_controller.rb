@@ -16,8 +16,7 @@ class BlogsController < ApplicationController
     @blog = Blog.new
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @blog = current_user.blogs.new(blog_params)
@@ -54,6 +53,10 @@ class BlogsController < ApplicationController
   end
 
   def blog_params
-    params.require(:blog).permit(:title, :content, :secret, :random_eyecatch)
+    if current_user.premium
+      params.require(:blog).permit(:title, :content, :secret, :random_eyecatch)
+    else
+      params.require(:blog).permit(:title, :content, :secret)
+    end
   end
 end
