@@ -11,7 +11,8 @@ class BlogsController < ApplicationController
   end
 
   def show
-    raise ActiveRecord::RecordNotFound if @blog.secret && @blog.user != current_user
+    visible_blogs = Blog.where(secret: false).or(Blog.where(user: current_user))
+    @blog = visible_blogs.find(params[:id])
   end
 
   def new
@@ -55,10 +56,7 @@ class BlogsController < ApplicationController
   end
 
   def blog_params
-    if current_user.premium
-      params.require(:blog).permit(:title, :content, :secret, :random_eyecatch)
-    else
-      params.require(:blog).permit(:title, :content, :secret)
-    end
+    permitted = current_user.premium ? %i[title content secret random_eyecatch] : %i[title content secret]
+    params.require(:blog).permit(permitted)
   end
 end
