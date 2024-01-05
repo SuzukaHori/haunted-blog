@@ -11,8 +11,7 @@ class BlogsController < ApplicationController
   end
 
   def show
-    visible_blogs = Blog.where(secret: false).or(Blog.where(user: current_user))
-    @blog = visible_blogs.find(params[:id])
+    @blog = Blog.visible(current_user).find(params[:id])
   end
 
   def new
