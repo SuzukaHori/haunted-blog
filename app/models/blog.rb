@@ -9,7 +9,7 @@ class Blog < ApplicationRecord
 
   scope :published, -> { where('secret = FALSE') }
   scope :visible, lambda { |current_user|
-    current_user ? published.or(where("user_id = #{current_user.id}")) : published
+    current_user ? published.or(where('user_id = ?', current_user.id)) : published
   }
 
   scope :search, lambda { |term|
