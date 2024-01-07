@@ -8,8 +8,8 @@ class Blog < ApplicationRecord
   validates :title, :content, presence: true
 
   scope :published, -> { where('secret = FALSE') }
-  scope :visible, lambda { |current_user|
-    current_user ? published.or(where('user_id = ?', current_user.id)) : published
+  scope :visible_to, lambda { |user|
+    user ? published.or(where('user_id = ?', user.id)) : published
   }
 
   scope :search, lambda { |term|
